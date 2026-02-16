@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dany Drummer | Official Home</title>
+
+  <link rel="icon" href="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw">
+  <style>
+    /* --- CORE VARIABLES --- */
+    :root {
+      --primary: #00f2ff;   
+      --secondary: #bd00ff;
+      --dark: #050508;
+      --surface: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--dark);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.15), transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.15), transparent 40%);
+    }
+
+    /* Cinematic Grain */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* --- NAVIGATION --- */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      background: rgba(5, 5, 8, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 45px; height: 45px;
+      border-radius: 12px;
+      border: 1px solid var(--primary);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+    }
+
+    .brand-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    .menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+    /* --- HERO SECTION (UPDATED LAYOUT) --- */
+    .hero {
+      min-height: 100vh;
+      display: flex; /* Flexbox for side-by-side layout */
+      align-items: center;
+      justify-content: space-between; /* Pushes content to edges */
+      padding: 100px 5% 50px;
+      position: relative;
+    }
+
+    /* Left Side: Text & Buttons */
+    .hero-content {
+      flex: 1;
+      max-width: 600px;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 6vw, 5rem); /* Slightly smaller to fit side-by-side */
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 1rem;
+      background: linear-gradient(180deg, #fff 40%, rgba(255,255,255,0.5) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-transform: uppercase;
+      animation: slideUp 1s ease-out;
+    }
+
+    .hero h1 span {
+      color: var(--primary); 
+      text-shadow: 0 0 30px var(--primary);
+      background: none;
+      -webkit-text-fill-color: var(--primary);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: slideUp 1s ease-out 0.2s backwards;
+    }
+
+    /* --- MODERN ICONS --- */
+    .social-hero {
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+      animation: fadeIn 1s ease-out 0.4s backwards;
+    }
+
+    .mod-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .mod-icon::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: -1;
+    }
+
+    .mod-icon:hover {
+      transform: translateY(-8px);
+      border-color: transparent;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 20px var(--c1);
+    }
+    .mod-icon:hover::before { opacity: 1; }
+
+    /* --- CTA BUTTON --- */
+    .cta-btn {
+      padding: 15px 40px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--dark);
+      background: var(--primary);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+      display: inline-flex;
+      align-items: center;
+    }
+    .cta-btn:hover { transform: scale(1.05); background: #fff; box-shadow: 0 0 40px var(--primary); }
+
+    /* --- RIGHT SIDE: PROFILE CIRCLE (NEW) --- */
+    .hero-image-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      animation: fadeIn 1.5s ease-out 0.5s backwards;
+    }
+
+    .profile-circle {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      padding: 10px; /* Space for the spinning border */
+      background: rgba(255,255,255,0.02);
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    /* The Spinning Neon Ring */
+    .profile-circle::before {
+      content: '';
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      background: conic-gradient(transparent, transparent, transparent, var(--primary));
+      animation: spin 4s linear infinite;
+      filter: blur(5px);
+      z-index: -1;
+    }
+    
+    /* Inner Border */
+    .profile-circle::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    .profile-circle img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover; /* Ensures image doesn't stretch */
+      position: relative;
+      z-index: 1;
+      border: 5px solid var(--dark); /* Inner dark gap */
+    }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; text-align: center; padding-top: 120px; }
+      .hero-content { margin-bottom: 3rem; }
+      .social-hero { justify-content: center; }
+      .hero-image-wrapper { width: 100%; justify-content: center; }
+      .profile-circle { width: 300px; height: 300px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: fixed; top: 80px; left: 0; right: 0; bottom: 0; background: #050508; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; font-size: 1.5rem; }
+      .nav-links.active { display: flex; }
+      .menu-btn { display: block; z-index: 1001; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="#" class="brand">
+      <img src="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw" alt="Logo">
+      <span class="brand-text">DANY DRUMMER</span>
+    </a>
+
+    <button class="menu-btn" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="liv.html">Live</a></li>
+      <li><a href="gllery.html">Gallery</a></li>
+      <li><a href="cont.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Home / Hero Section -->
+  <section class="hero">
+    
+    <!-- LEFT: Text & Buttons -->
+    <div class="hero-content">
+      <h1>Dany <span>Drummer</span></h1>
+      <p>Rhythm &bull; Power &bull; Soul</p>
+
+      <!-- Social Icons -->
+      <div class="social-hero">
+        <a href="https://facebook.com/survanjrod" target="_blank" class="mod-icon" style="--c1: #1877F2; --c2: #00C6FF;" aria-label="Facebook">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://instagram.com/jrodsurvan" target="_blank" class="mod-icon" style="--c1: #f09433; --c2: #bc1888;" aria-label="Instagram">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="https://youtube.com/jrodsurvan" target="_blank" class="mod-icon" style="--c1: #FF0000; --c2: #cc0000;" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+      </div>
+
+      <!-- Watch Live Button -->
+      <a href="https://www.youtube.com/@dany-g-drummer" target="_blank" class="cta-btn">
+        Watch Live <i class="fa-solid fa-play" style="margin-left: 10px; font-size: 0.8em;"></i>
+      </a>
+    </div>
+
+    <!-- RIGHT: Profile Picture Circle -->
+    <div class="hero-image-wrapper">
+      <div class="profile-circle">
+        <!-- 
+           REPLACE THIS SRC WITH YOUR IMAGE FILE 
+           Example: src="/home/jrodsurvan/Pictures/my-photo.jpg"
+        -->
+        <img src="/home/jrodsurvan/Public/Pictures/PXL_20250827_133813172.NIGHT-1-1.jpg" alt="Dany Drummer Profile">
+      </div>
+    </div>
+
+  </section>
+  
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById('navLinks');
+      const icon = document.querySelector('.menu-btn i');
+      nav.classList.toggle('active');
+      if (nav.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      } else {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      }
+    }
+  </script>
+</body>
+</html>

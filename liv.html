@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live Stream | Dany Drummer</title>
+
+  <link rel="icon" href="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw">
+  <style>
+    /* --- CORE VARIABLES --- */
+    :root {
+      --primary: #00f2ff;   
+      --secondary: #bd00ff;
+      --dark: #050508;
+      --surface: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+      --red-live: #ff0000;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--dark);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.15), transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.15), transparent 40%);
+    }
+
+    /* --- NAVIGATION (Same as Home) --- */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      background: rgba(5, 5, 8, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 45px; height: 45px;
+      border-radius: 12px;
+      border: 1px solid var(--primary);
+    }
+
+    .brand-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    .menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+    /* --- LIVE CONTAINER --- */
+    .live-container {
+      padding-top: 100px; /* Space for navbar */
+      max-width: 1600px;
+      margin: 0 auto;
+      padding-left: 5%;
+      padding-right: 5%;
+      padding-bottom: 4rem;
+    }
+
+    .live-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px; /* Video takes most space, Chat takes 350px */
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    /* --- VIDEO PLAYER --- */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 50px rgba(0, 242, 255, 0.05);
+    }
+
+    .video-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .live-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--red-live);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+      animation: pulseRed 2s infinite;
+    }
+
+    .live-dot {
+      width: 8px; height: 8px; background: #fff; border-radius: 50%;
+    }
+
+    @keyframes pulseRed {
+      0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+    }
+
+    /* --- STREAM INFO --- */
+    .stream-info {
+      margin-top: 1.5rem;
+    }
+
+    .stream-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .stream-meta {
+      display: flex;
+      gap: 1.5rem;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.95rem;
+      align-items: center;
+    }
+
+    .view-count { color: var(--red-live); font-weight: 600; }
+
+    /* --- CHAT SIDEBAR --- */
+    .chat-sidebar {
+      background: rgba(10, 10, 15, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 600px; /* Fixed height for chat */
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* Hide scrollbar for cleaner look */
+    .chat-messages::-webkit-scrollbar { width: 6px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+    .message {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .user-name {
+      font-weight: 700;
+      color: var(--primary);
+      margin-right: 8px;
+    }
+
+    .user-name.mod { color: var(--secondary); }
+
+    .chat-input-area {
+      padding: 15px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 10px 15px;
+      color: #fff;
+      font-family: inherit;
+    }
+
+    .chat-input:focus { outline: none; border-color: var(--primary); }
+
+    .send-btn {
+      background: var(--primary);
+      border: none;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      color: #000;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .send-btn:hover { transform: scale(1.1); }
+
+    /* --- PAST UPLOADS --- */
+    .section-header { margin-bottom: 2rem; }
+    .section-header h2 { font-family: 'Space Grotesk'; font-size: 2rem; }
+    
+    .uploads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .upload-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .upload-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      position: relative;
+    }
+    
+    .thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+    .upload-card:hover .thumb img { opacity: 1; }
+
+    .duration {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      background: rgba(0,0,0,0.8);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .card-info { padding: 15px; }
+    .card-info h3 { font-size: 1rem; margin-bottom: 5px; line-height: 1.3; }
+    .card-info p { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 900px) {
+      .live-grid { grid-template-columns: 1fr; }
+      .chat-sidebar { height: 400px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: fixed; top: 80px; left: 0; right: 0; bottom: 0; background: #050508; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; font-size: 1.5rem; }
+      .nav-links.active { display: flex; }
+      .menu-btn { display: block; z-index: 1001; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="exe.html" class="brand">
+      <img src="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw" alt="Logo">
+      <span class="brand-text">DANY DRUMMER</span>
+    </a>
+
+    <button class="menu-btn" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="church.html">Home</a></li>
+      <li><a href="liv.html" class="active">Live</a></li>
+      <li><a href="gllery.html">Gallery</a></li>
+      <li><a href="cont.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Live Page Content -->
+  <div class="live-container">
+    
+    <div class="live-grid">
+      <!-- Video Player Section -->
+      <div class="main-content">
+        <div class="video-wrapper">
+          <div class="live-badge">
+            <div class="live-dot"></div> Live
+          </div>
+
+          <!-- 
+             IMPORTANT: To stream, go to YouTube/Twitch Studio, get the "Embed Code" 
+             and paste it inside the div below. 
+             For now, I put a placeholder image.
+          -->
+          <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; background:#111; color:#444;">
+             <i class="fa-brands fa-youtube" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+             <p>Stream Loading...</p>
+             <p style="font-size:0.8rem; margin-top:10px;">(Paste YouTube Embed Code Here)</p>
+          </div>
+          <!-- 
+             Example of what to paste:
+             <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" ...></iframe> 
+          -->
+
+        </div>
+
+        <div class="stream-info">
+          <h1 class="stream-title">LIVE: Sunday Worship & Drum Session</h1>
+          <div class="stream-meta">
+            <span class="view-count"><i class="fa-solid fa-eye"></i> 1,240 watching</span>
+            <span><i class="fa-regular fa-clock"></i> Started 2 hours ago</span>
+            <button style="background:none; border:none; color:var(--primary); cursor:pointer; margin-left:auto;">
+              <i class="fa-solid fa-share-nodes"></i> Share
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Chat Section -->
+      <div class="chat-sidebar">
+        <div class="chat-header">
+          <span>Top Chat</span>
+          <i class="fa-solid fa-ellipsis-vertical" style="cursor:pointer;"></i>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+          <!-- Fake Messages for Demo -->
+          <div class="message"><span class="user-name mod">Admin</span> Welcome to the stream everyone! 🥁</div>
+          <div class="message"><span class="user-name">DrumFan99</span> That fill was insane!</div>
+          <div class="message"><span class="user-name">Sarah_Music</span> How long have you been playing?</div>
+          <div class="message"><span class="user-name">BeatKing</span> Sound quality is great tonight.</div>
+          <div class="message"><span class="user-name">RhythmMaster</span> Can you play the intro again?</div>
+          <div class="message"><span class="user-name mod">Admin</span> Don't forget to like and subscribe!</div>
+          <div class="message"><span class="user-name">JasonD</span> 🔥🔥🔥</div>
+        </div>
+
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" placeholder="Say something...">
+          <button class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+
+   
+  </div>
+
+  <script>
+    
+  var form = document.getElementById("jrodsurvan@gmail.com");
+  
+  async function handleSubmit(event) {
+    event.preventDefault(); // Stop the page from reloading
+    var status = document.getElementById("my-form-status");
+    var data = new FormData(event.target);
+    
+    // Show a temporary "Sending..." state on the button
+    const btn = form.querySelector('button');
+    const originalIcon = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; // Loading icon
+
+    fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        // Success! Clear input and show feedback
+        form.querySelector("input").value = ""; 
+        btn.innerHTML = '<i class="fa-solid fa-check"></i>'; // Checkmark
+        btn.style.color = "#0f0";
+        btn.style.background = "#fff";
+        
+        // Reset button after 2 seconds
+        setTimeout(() => {
+            btn.innerHTML = originalIcon;
+            btn.style.color = "";
+            btn.style.background = "";
+        }, 2000);
+        
+        // Optional: Add the message to the chat visually (fake append)
+        const chatBox = document.getElementById('chatMessages');
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message';
+        userMsg.innerHTML = '<span class="user-name" style="color:#0f0">You</span> Message sent to Dany!';
+        chatBox.appendChild(userMsg);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+
+      } else {
+        // Error
+        btn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      }
+    }).catch(error => {
+        // Network Error
+        btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+    });
+  }
+
+  form.addEventListener("submit", handleSubmit);
+
+    function toggleMenu() {
+      const nav = document.getElementById('navLinks');
+      const icon = document.querySelector('.menu-btn i');
+      nav.classList.toggle('active');
+      if (nav.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      } else {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      }
+    }
+
+    // Simple script to make chat feel alive (auto-scroll)
+    const chatContainer = document.getElementById('chatMessages');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  </script>
+
+</body>
+</html>

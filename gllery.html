@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery | Dany Drummer</title>
+
+  <link rel="icon" href="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw">
+  <style>
+    /* --- CORE VARIABLES --- */
+    :root {
+      --primary: #00f2ff;   
+      --secondary: #bd00ff;
+      --dark: #050508;
+      --surface: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--dark);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.15), transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.15), transparent 40%);
+    }
+
+    /* --- NAVIGATION --- */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      background: rgba(5, 5, 8, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 45px; height: 45px;
+      border-radius: 12px;
+      border: 1px solid var(--primary);
+    }
+
+    .brand-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    .menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+    /* --- GALLERY CONTAINER --- */
+    .gallery-container {
+      padding-top: 120px;
+      padding-bottom: 60px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+
+    /* --- HEADER & FILTERS --- */
+    .gallery-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .gallery-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #fff, var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .filter-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+    }
+
+    /* --- GRID LAYOUT --- */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      height: 300px; /* Fixed height for uniformity */
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #111;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    /* Overlay on Hover */
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-overlay i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay i {
+      transform: translateY(0);
+    }
+
+    .gallery-overlay h3 {
+      font-size: 1.2rem;
+      transform: translateY(20px);
+      transition: transform 0.3s ease 0.1s;
+    }
+
+    .gallery-item:hover .gallery-overlay h3 {
+      transform: translateY(0);
+    }
+
+    /* Hide items for filtering */
+    .gallery-item.hide {
+      display: none;
+    }
+
+    /* --- LIGHTBOX (MODAL) --- */
+    .lightbox {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+      box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
+      border: 1px solid var(--border);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 30px; right: 30px;
+      font-size: 3rem;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .lightbox-close:hover { color: var(--primary); transform: rotate(90deg); }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: fixed; top: 80px; left: 0; right: 0; bottom: 0; background: #050508; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; font-size: 1.5rem; }
+      .nav-links.active { display: flex; }
+      .menu-btn { display: block; z-index: 1001; }
+      .gallery-header h1 { font-size: 2.5rem; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="church.html" class="brand">
+      <img src="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw" alt="Logo">
+      <span class="brand-text">DANY DRUMMER</span>
+    </a>
+
+    <button class="menu-btn" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="church.html">Home</a></li>
+      <li><a href="liv.html">Live</a></li>
+      <li><a href="gllery.html" class="active">Gallery</a></li>
+      <li><a href="cont.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="gallery-container">
+    
+    <div class="gallery-header">
+      <h1>Visual Rhythms</h1>
+      <p style="color:rgba(255,255,255,0.6); margin-bottom: 2rem;">Capturing the energy behind the kit.</p>
+      
+      <!-- Filter Buttons -->
+      <div class="filter-buttons">
+        <button class="filter-btn active" onclick="filterGallery('all')">All</button>
+        <button class="filter-btn" onclick="filterGallery('live')">Live Shows</button>
+        <button class="filter-btn" onclick="filterGallery('studio')">Studio</button>
+        <button class="filter-btn" onclick="filterGallery('events')">Events</button>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="gallery-grid" id="galleryGrid">
+      
+      <!-- Item 1: Live -->
+      <!-- Replace src with your local image: e.g. /home/jrodsurvan/Pictures/PXL_20250827_133704691.MP.jpg -->
+      <div class="gallery-item" data-category="live">
+        <img src="https://picsum.photos/seed/drumLive1/600/600" alt="Live Show">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Sunday Service</h3>
+        </div>
+      </div>
+
+      <!-- Item 2: Studio -->
+      <div class="gallery-item" data-category="studio">
+        <img src="https://picsum.photos/seed/drumStudio1/600/600" alt="Studio">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Recording Session</h3>
+        </div>
+      </div>
+
+      <!-- Item 3: Events -->
+      <div class="gallery-item" data-category="events">
+        <img src="https://picsum.photos/seed/drumEvent1/600/600" alt="Event">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Festival Night</h3>
+        </div>
+      </div>
+
+      <!-- Item 4: Live -->
+      <div class="gallery-item" data-category="live">
+        <img src="https://picsum.photos/seed/drumLive2/600/600" alt="Live">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Concert Crowd</h3>
+        </div>
+      </div>
+
+      <!-- Item 5: Studio -->
+      <div class="gallery-item" data-category="studio">
+        <img src="https://picsum.photos/seed/drumStudio2/600/600" alt="Studio">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Behind The Scenes</h3>
+        </div>
+      </div>
+
+      <!-- Item 6: Events -->
+      <div class="gallery-item" data-category="events">
+        <img src="https://picsum.photos/seed/drumEvent2/600/600" alt="Event">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Charity Gig</h3>
+        </div>
+      </div>
+
+       <!-- Item 7: Live -->
+       <div class="gallery-item" data-category="live">
+        <img src="https://picsum.photos/seed/drumLive3/600/600" alt="Live">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Drum Solo</h3>
+        </div>
+      </div>
+
+      <!-- Item 8: Studio -->
+      <div class="gallery-item" data-category="studio">
+        <img src="https://picsum.photos/seed/drumStudio3/600/600" alt="Studio">
+        <div class="gallery-overlay">
+          <i class="fa-solid fa-expand"></i>
+          <h3>Gear Setup</h3>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="Full Screen">
+  </div>
+
+  <script>
+    // 1. Mobile Menu Toggle
+    function toggleMenu() {
+      const nav = document.getElementById('navLinks');
+      const icon = document.querySelector('.menu-btn i');
+      nav.classList.toggle('active');
+      if (nav.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      } else {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      }
+    }
+
+    // 2. Gallery Filter Logic
+    function filterGallery(category) {
+      const items = document.querySelectorAll('.gallery-item');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      // Update Active Button Style
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.toLowerCase().includes(category) || (category === 'all' && btn.innerText === 'All')) {
+          btn.classList.add('active');
+        }
+      });
+
+      // Show/Hide Items
+      items.forEach(item => {
+        if (category === 'all' || item.getAttribute('data-category') === category) {
+          item.classList.remove('hide');
+        } else {
+          item.classList.add('hide');
+        }
+      });
+    }
+
+    // 3. Lightbox Logic
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+
+    galleryItems.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+    }
+
+    // Close lightbox when clicking outside the image
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+  </script>
+</body>
+</html>

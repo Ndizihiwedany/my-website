@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ibitaramo - Events & Gatherings</title>
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    
+    :root {
+      --bg-dark: #0d1117;
+      --bg-card: #161b22;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --border: #30363d;
+      --nav-height: 70px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-dark);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .navbar {
+      background: rgba(13, 17, 23, 0.95);
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .logo img {
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-menu a {
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+      color: #ffffff;
+    }
+
+    .nav-menu i {
+      font-size: 16px;
+    }
+
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .search-input {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-main);
+      padding: 8px 16px;
+      width: 0; 
+      opacity: 0;
+      transition: all 0.4s ease;
+      outline: none;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .search-input.active {
+      width: 220px;
+      opacity: 1;
+      padding-right: 40px;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 0;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s;
+      background: transparent;
+      border: none;
+      z-index: 2;
+    }
+
+    .search-icon:hover {
+      color: #ffffff;
+    }
+
+    #nav-toggle {
+      display: none;
+    }
+
+    .hamburger-label {
+      display: none;
+      font-size: 24px;
+      color: #ffffff;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .background {
+      background-color: #6f757a;
+      border-radius: 20px;
+      max-width: 1300px; 
+      width: 95%;        
+      margin: 30px auto; 
+      padding: 40px 20px; 
+      box-shadow: 0 0 30px rgba(88, 166, 255, 0.2); 
+    }
+
+    .container {
+      max-width: 100%; 
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 30px;
+      border-bottom: 2px solid rgba(0,0,0,0.1); 
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      position: relative;
+      color: #fff; 
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px; 
+    }
+
+    .card {
+      background: #ffffff; 
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .card-img {
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; 
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .card-img img {
+      transform: scale(1.1);
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      color: #333; 
+      font-weight: 700;
+    }
+
+    .card-meta {
+      font-size: 0.85rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    
+    footer {
+      background: var(--bg-card);
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    .footer-content p {
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .social-icons {
+      margin-top: 20px;
+    }
+
+    .social-icons a {
+      color: var(--text-muted);
+      margin: 0 10px;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: #4167a0;
+    }
+
+
+    
+    @media (max-width: 768px) {
+      .hamburger-label {
+        display: block;
+      }
+
+      .nav-menu {
+        position: absolute;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        background: var(--bg-card);
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+        border-bottom: 1px solid var(--border);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: all 0.4s ease-in-out;
+      }
+
+      #nav-toggle:checked ~ .navbar-container .nav-menu {
+        max-height: 400px;
+        opacity: 1;
+      }
+
+      .search-container {
+        margin-right: 10px;
+      }
+      
+      .section-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .background {
+        width: 100%;
+        border-radius: 0; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <input type="checkbox" id="nav-toggle">
+    
+    <div class="navbar-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+      
+      <a href="#" class="logo">
+        <img src="https://imgs.search.brave.com/q5SALMnDW3CVKVEVbB6YQurWm1N61pWOvw-i0g8pJ_Q/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pbWcu/aWNvbnM4LmNvbS8z/ZC1mbHVlbmN5LzEy/MDAvaG9seS1iaWJs/ZS5qcGc" alt="Bible">
+        <span>IBITARAMO</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#" class="active"><i class="fa-solid fa-calendar-days"></i> Events</a></li>
+        <li><a href="#"><i class="fa-solid fa-list-ul"></i> Categories</a></li>
+        <li><a href="#"><i class="fa-solid fa-location-dot"></i> Venues</a></li>
+        <li><a href="#"><i class="fa-solid fa-file-lines"></i> Terms</a></li>
+        <li><a href="#"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+      </ul>
+
+      <div style="display: flex; align-items: center;">
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="Search events...">
+          <button class="search-icon" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+
+        <label for="nav-toggle" class="hamburger-label">
+          <i class="fa-solid fa-bars"></i>
+        </label>
+      </div>
+    </div>
+  </nav>
+
+  <div class="background">
+    
+    <section id="events" class="container">
+      <div class="section-header">
+        <h2>All Events</h2>
+        <hr style="color:black;">
+      </div>
+      
+      <div class="gallery">
+        <div class="card">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=600&auto=format&fit=crop" alt="Church Service">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Sunday Service</h3>
+            <div class="card-meta"><i class="fa-regular fa-clock"></i> 10:00 AM</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=600&auto=format&fit=crop" alt="Bible Study">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Bible Study</h3>
+            <div class="card-meta"><i class="fa-regular fa-clock"></i> 6:00 PM</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop" alt="Youth Conference">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Youth Conference</h3>
+            <div class="card-meta"><i class="fa-regular fa-calendar"></i> Next Friday</div><br><br>
+          </div>
+        </div><br><br>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="/home/jrodsurvan/Downloads/dnj.jpg" alt="Prayer Night">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Prayer Night</h3>
+            <div class="card-meta"><i class="fa-solid fa-location-dot"></i> Main Hall</div>
+          </div>
+        </div>
+
+
+        <div class="card">
+          <div class="card-img">
+            <img src="/home/jrodsurvan/Downloads/dnh.jpg" alt="Prayer Night">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Prayer in morng woship</h3>
+            <div class="card-meta"><i class="fa-solid fa-location-dot"></i> Main Hall</div>
+          </div>
+        </div>
+
+
+        <div class="card">
+          <div class="card-img">
+            <img src="/home/jrodsurvan/Downloads/dy.jpg" alt="Prayer Night">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Church praise</h3>
+            <div class="card-meta"><i class="fa-solid fa-location-dot"></i> Main Hall</div>
+          </div>
+        </div><br><br>
+        
+
+        <div class="card">
+          <div class="card-img">
+            <img src="/home/jrodsurvan/Downloads/dh (Copy).jpg" alt="Prayer Night">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Pastol</h3>
+            <div class="card-meta"><i class="fa-solid fa-location-dot"></i> Main Hall</div>
+          </div>
+        </div>
+      </div>
+    </section>
+        
+
+    <section class="container">
+      <div class="section-header">
+        <h2>Recent Events</h2>
+        <hr>
+      </div>
+      
+      <div class="gallery">
+        <div class="card">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?q=80&w=600&auto=format&fit=crop" alt="Concert">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Gospel Concert</h3>
+            <div class="card-meta"><i class="fa-solid fa-check"></i> Completed</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600&auto=format&fit=crop" alt="Charity">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Charity Drive</h3>
+            <div class="card-meta"><i class="fa-solid fa-check"></i> Completed</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="/home/jrodsurvan/Public/Pictures/PXL_20250827_133813172.NIGHT-1-1.jpg" alt="Summit">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Leadership Summit</h3>
+            <div class="card-meta"><i class="fa-solid fa-check"></i> Completed</div>
+          </div>
+        </div><br><br>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=600&auto=format&fit=crop" alt="Lunch">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Community Lunch</h3>
+            <div class="card-meta"><i class="fa-solid fa-check"></i> Completed</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600&auto=format&fit=crop" alt="Charity">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Charity Drive</h3>
+            <div class="card-meta"><i class="fa-solid fa-check"></i> Completed</div>
+          </div>
+        </div><br><br>
+        
+      </div>
+    </section>
+    
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <h3>Ibitaramo</h3>
+      <p>Connecting people through faith and events.</p>
+      <p>christchurch@gmail.com</p>
+      
+      <div class="social-icons">
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+      
+      <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2024 Ibitaramo. All rights reserved.</p>
+    </div>
+  </footer>
+
+  
+  <script>
+    alert("hello, you are welcome ");
+
+    
+    const searchBtn = document.getElementById('searchBtn');
+    const searchInput = document.querySelector('.search-input');
+
+    
+    searchBtn.addEventListener('click', () => {
+      searchInput.classList.toggle('active');
+      
+      
+      if (searchInput.classList.contains('active')) {
+        searchInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>
