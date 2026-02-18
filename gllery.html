@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gallery | Dany Drummer</title>
+  <title>Dany Drummer</title>
 
   <link rel="icon" href="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw">
   <style>
-    /* --- CORE VARIABLES --- */
+    
     :root {
       --primary: #00f2ff;   
       --secondary: #bd00ff;
@@ -30,7 +30,7 @@
         radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.15), transparent 40%);
     }
 
-    /* --- NAVIGATION --- */
+    
     .navbar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -83,7 +83,7 @@
     .nav-links a:hover, .nav-links a.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
     .menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
 
-    /* --- GALLERY CONTAINER --- */
+   
     .gallery-container {
       padding-top: 120px;
       padding-bottom: 60px;
@@ -93,7 +93,7 @@
       padding-right: 5%;
     }
 
-    /* --- HEADER & FILTERS --- */
+    
     .gallery-header {
       text-align: center;
       margin-bottom: 3rem;
@@ -138,7 +138,7 @@
       box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
     }
 
-    /* --- GRID LAYOUT --- */
+   
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -149,7 +149,7 @@
       position: relative;
       border-radius: 16px;
       overflow: hidden;
-      height: 300px; /* Fixed height for uniformity */
+      height: 300px;
       cursor: pointer;
       border: 1px solid var(--border);
       background: #111;
@@ -167,7 +167,7 @@
       transform: scale(1.1);
     }
 
-    /* Overlay on Hover */
+    
     .gallery-overlay {
       position: absolute;
       inset: 0;
@@ -206,12 +206,12 @@
       transform: translateY(0);
     }
 
-    /* Hide items for filtering */
+   
     .gallery-item.hide {
       display: none;
     }
 
-    /* --- LIGHTBOX (MODAL) --- */
+    
     .lightbox {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -250,7 +250,7 @@
 
     .lightbox-close:hover { color: var(--primary); transform: rotate(90deg); }
 
-    /* --- RESPONSIVE --- */
+   
     @media (max-width: 768px) {
       .nav-links { display: none; position: fixed; top: 80px; left: 0; right: 0; bottom: 0; background: #050508; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; font-size: 1.5rem; }
       .nav-links.active { display: flex; }
@@ -266,7 +266,7 @@
 </head>
 <body>
 
-  <!-- Navigation -->
+ 
   <nav class="navbar">
     <a href="church.html" class="brand">
       <img src="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw" alt="Logo">
@@ -285,14 +285,14 @@
     </ul>
   </nav>
 
-  <!-- Main Content -->
+ 
   <div class="gallery-container">
     
     <div class="gallery-header">
       <h1>Visual Rhythms</h1>
       <p style="color:rgba(255,255,255,0.6); margin-bottom: 2rem;">Capturing the energy behind the kit.</p>
       
-      <!-- Filter Buttons -->
+      
       <div class="filter-buttons">
         <button class="filter-btn active" onclick="filterGallery('all')">All</button>
         <button class="filter-btn" onclick="filterGallery('live')">Live Shows</button>
@@ -301,93 +301,91 @@
       </div>
     </div>
 
-    <!-- Gallery Grid -->
+   
     <div class="gallery-grid" id="galleryGrid">
       
-      <!-- Item 1: Live -->
-      <!-- Replace src with your local image: e.g. /home/jrodsurvan/Pictures/PXL_20250827_133704691.MP.jpg -->
+     
       <div class="gallery-item" data-category="live">
-        <img src="https://picsum.photos/seed/drumLive1/600/600" alt="Live Show">
+        <img src="/home/jrodsurvan/Downloads/dy.jpg" alt="Live Show">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
           <h3>Sunday Service</h3>
         </div>
       </div>
 
-      <!-- Item 2: Studio -->
+
       <div class="gallery-item" data-category="studio">
-        <img src="https://picsum.photos/seed/drumStudio1/600/600" alt="Studio">
+        <img src="/home/jrodsurvan/Downloads/dnh.jpg" alt="Studio">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
           <h3>Recording Session</h3>
         </div>
       </div>
 
-      <!-- Item 3: Events -->
       <div class="gallery-item" data-category="events">
-        <img src="https://picsum.photos/seed/drumEvent1/600/600" alt="Event">
+        <img src="/home/jrodsurvan/Downloads/dnj.jpg" alt="Event">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
           <h3>Festival Night</h3>
         </div>
       </div>
 
-      <!-- Item 4: Live -->
+     
       <div class="gallery-item" data-category="live">
-        <img src="https://picsum.photos/seed/drumLive2/600/600" alt="Live">
+        <img src="/home/jrodsurvan/Public/Pictures/PXL_20250827_133813172.NIGHT-1-1.jpg" alt="Live">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
           <h3>Concert Crowd</h3>
         </div>
       </div>
 
-      <!-- Item 5: Studio -->
+     
       <div class="gallery-item" data-category="studio">
-        <img src="https://picsum.photos/seed/drumStudio2/600/600" alt="Studio">
+        <img src="/home/jrodsurvan/Public/Pictures/PXL_20250827_133704691.MP.jpg" alt="Studio">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
           <h3>Behind The Scenes</h3>
         </div>
       </div>
 
-      <!-- Item 6: Events -->
+     
       <div class="gallery-item" data-category="events">
-        <img src="https://picsum.photos/seed/drumEvent2/600/600" alt="Event">
+        <img src="/home/jrodsurvan/Downloads/dh (Copy).jpg" alt="Event">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
-          <h3>Charity Gig</h3>
+          <h3>dany Drummer</h3>
         </div>
       </div>
 
-       <!-- Item 7: Live -->
+     
        <div class="gallery-item" data-category="live">
-        <img src="https://picsum.photos/seed/drumLive3/600/600" alt="Live">
+        <img src="/home/jrodsurvan/Downloads/kick (Copy).jpg" alt="Live">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
           <h3>Drum Solo</h3>
         </div>
       </div>
 
-      <!-- Item 8: Studio -->
+     
       <div class="gallery-item" data-category="studio">
-        <img src="https://picsum.photos/seed/drumStudio3/600/600" alt="Studio">
+        <img src="/home/jrodsurvan/Downloads/log (Copy).png" alt="Studio">
         <div class="gallery-overlay">
           <i class="fa-solid fa-expand"></i>
-          <h3>Gear Setup</h3>
+          <h3>dany logo</h3>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Lightbox Modal -->
+  
   <div class="lightbox" id="lightbox">
     <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
     <img class="lightbox-img" id="lightbox-img" src="" alt="Full Screen">
   </div>
 
   <script>
-    // 1. Mobile Menu Toggle
+    
     function toggleMenu() {
       const nav = document.getElementById('navLinks');
       const icon = document.querySelector('.menu-btn i');
@@ -401,12 +399,12 @@
       }
     }
 
-    // 2. Gallery Filter Logic
+
     function filterGallery(category) {
       const items = document.querySelectorAll('.gallery-item');
       const buttons = document.querySelectorAll('.filter-btn');
 
-      // Update Active Button Style
+      
       buttons.forEach(btn => {
         btn.classList.remove('active');
         if (btn.innerText.toLowerCase().includes(category) || (category === 'all' && btn.innerText === 'All')) {
@@ -414,7 +412,7 @@
         }
       });
 
-      // Show/Hide Items
+    
       items.forEach(item => {
         if (category === 'all' || item.getAttribute('data-category') === category) {
           item.classList.remove('hide');
@@ -424,7 +422,6 @@
       });
     }
 
-    // 3. Lightbox Logic
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const galleryItems = document.querySelectorAll('.gallery-item img');
@@ -440,7 +437,7 @@
       lightbox.classList.remove('active');
     }
 
-    // Close lightbox when clicking outside the image
+  
     lightbox.addEventListener('click', (e) => {
       if (e.target === lightbox) {
         closeLightbox();

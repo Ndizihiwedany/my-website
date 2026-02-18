@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Live Stream | Dany Drummer</title>
+  <title>Dany Drummer</title>
 
   <link rel="icon" href="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw">
   <style>
-    /* --- CORE VARIABLES --- */
+    
     :root {
       --primary: #00f2ff;   
       --secondary: #bd00ff;
@@ -31,7 +31,7 @@
         radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.15), transparent 40%);
     }
 
-    /* --- NAVIGATION (Same as Home) --- */
+
     .navbar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -84,9 +84,9 @@
     .nav-links a:hover, .nav-links a.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
     .menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
 
-    /* --- LIVE CONTAINER --- */
+
     .live-container {
-      padding-top: 100px; /* Space for navbar */
+      padding-top: 100px; 
       max-width: 1600px;
       margin: 0 auto;
       padding-left: 5%;
@@ -96,12 +96,12 @@
 
     .live-grid {
       display: grid;
-      grid-template-columns: 1fr 350px; /* Video takes most space, Chat takes 350px */
+      grid-template-columns: 1fr 350px; 
       gap: 2rem;
       margin-bottom: 4rem;
     }
 
-    /* --- VIDEO PLAYER --- */
+    
     .video-wrapper {
       position: relative;
       width: 100%;
@@ -113,10 +113,22 @@
       box-shadow: 0 0 50px rgba(0, 242, 255, 0.05);
     }
 
-    .video-wrapper iframe {
+    #local-video-player {
       width: 100%;
       height: 100%;
-      border: none;
+      object-fit: contain;
+      display: none; 
+    }
+
+    #stream-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: #111;
+      color: #444;
     }
 
     .live-badge {
@@ -139,9 +151,7 @@
       animation: pulseRed 2s infinite;
     }
 
-    .live-dot {
-      width: 8px; height: 8px; background: #fff; border-radius: 50%;
-    }
+    .live-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; }
 
     @keyframes pulseRed {
       0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
@@ -149,10 +159,8 @@
       100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
     }
 
-    /* --- STREAM INFO --- */
-    .stream-info {
-      margin-top: 1.5rem;
-    }
+    
+    .stream-info { margin-top: 1.5rem; }
 
     .stream-title {
       font-size: 1.8rem;
@@ -167,11 +175,111 @@
       color: rgba(255,255,255,0.6);
       font-size: 0.95rem;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .view-count { color: var(--red-live); font-weight: 600; }
 
-    /* --- CHAT SIDEBAR --- */
+    .broadcast-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .broadcast-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+
+  
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      display: none; 
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: #111;
+      border: 1px solid var(--border);
+      padding: 2rem;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+      position: relative;
+    }
+
+    .modal-box h3 { margin-bottom: 1.5rem; color: #fff; font-family: 'Space Grotesk'; }
+
+    .pass-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      text-align: center;
+      letter-spacing: 5px;
+      margin-bottom: 1.5rem;
+      outline: none;
+    }
+    .pass-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,242,255,0.2); }
+
+    .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+    .btn-modal {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .btn-confirm { background: var(--primary); color: #000; }
+    .btn-cancel { background: #333; color: #fff; }
+
+    
+    #upload-area {
+      display: none; 
+      margin-top: 15px;
+      text-align: center;
+      padding: 25px;
+      border: 2px dashed var(--primary);
+      border-radius: 12px;
+      background: rgba(0, 242, 255, 0.05);
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    #file-input { display: none; }
+    
+    .upload-label {
+      cursor: pointer;
+      color: var(--primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      display: block;
+      padding: 15px;
+      transition: 0.3s;
+      border: 1px solid transparent;
+    }
+    .upload-label:hover { background: rgba(0, 242, 255, 0.1); border-radius: 8px; border-color: var(--primary); }
+
+  
     .chat-sidebar {
       background: rgba(10, 10, 15, 0.6);
       backdrop-filter: blur(20px);
@@ -179,7 +287,7 @@
       border-radius: 20px;
       display: flex;
       flex-direction: column;
-      height: 600px; /* Fixed height for chat */
+      height: 600px; 
       overflow: hidden;
     }
 
@@ -203,21 +311,11 @@
       gap: 15px;
     }
 
-    /* Hide scrollbar for cleaner look */
     .chat-messages::-webkit-scrollbar { width: 6px; }
     .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-    .message {
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
-    .user-name {
-      font-weight: 700;
-      color: var(--primary);
-      margin-right: 8px;
-    }
-
+    .message { font-size: 0.9rem; line-height: 1.4; }
+    .user-name { font-weight: 700; color: var(--primary); margin-right: 8px; }
     .user-name.mod { color: var(--secondary); }
 
     .chat-input-area {
@@ -236,7 +334,6 @@
       color: #fff;
       font-family: inherit;
     }
-
     .chat-input:focus { outline: none; border-color: var(--primary); }
 
     .send-btn {
@@ -250,52 +347,7 @@
     }
     .send-btn:hover { transform: scale(1.1); }
 
-    /* --- PAST UPLOADS --- */
-    .section-header { margin-bottom: 2rem; }
-    .section-header h2 { font-family: 'Space Grotesk'; font-size: 2rem; }
     
-    .uploads-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .upload-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: 0.3s;
-      cursor: pointer;
-    }
-
-    .upload-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-
-    .thumb {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000;
-      position: relative;
-    }
-    
-    .thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-    .upload-card:hover .thumb img { opacity: 1; }
-
-    .duration {
-      position: absolute;
-      bottom: 8px; right: 8px;
-      background: rgba(0,0,0,0.8);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .card-info { padding: 15px; }
-    .card-info h3 { font-size: 1rem; margin-bottom: 5px; line-height: 1.3; }
-    .card-info p { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
-
-    /* --- RESPONSIVE --- */
     @media (max-width: 900px) {
       .live-grid { grid-template-columns: 1fr; }
       .chat-sidebar { height: 400px; }
@@ -309,10 +361,22 @@
 </head>
 <body>
 
-  <!-- Navigation -->
+  
+  <div class="modal-overlay" id="passwordModal">
+    <div class="modal-box">
+      <h3><i class="fa-solid fa-lock"></i> Admin Access</h3>
+      <p style="color:#888; margin-bottom:10px; font-size:0.9rem;">Enter password to manage stream</p>
+      <input type="password" id="adminPassword" class="pass-input" placeholder="****" maxlength="4">
+      <div class="modal-actions">
+        <button class="btn-modal btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-modal btn-confirm" onclick="checkPassword()">Unlock</button>
+      </div>
+    </div>
+  </div>
+
   <nav class="navbar">
     <a href="exe.html" class="brand">
-      <img src="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw" alt="Logo">
+      <img src="https://imgs.search.brave.com/cxrra9e2OP7r6lZV61g7_3MD09zel7UkcqhNJ2MX9Jk/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bHVkd2lnLWRydW1z/LmNvbS9hcHBsaWNh/dGlvbi9maWxlcy82/OTE0LzYzNTEvNDE0/MC90aHVtYi1zbmFy/ZXMtbGVnYWN5Lmpw/Zw">
       <span class="brand-text">DANY DRUMMER</span>
     </a>
 
@@ -328,47 +392,47 @@
     </ul>
   </nav>
 
-  <!-- Main Live Page Content -->
+  
   <div class="live-container">
     
     <div class="live-grid">
-      <!-- Video Player Section -->
+     
       <div class="main-content">
         <div class="video-wrapper">
           <div class="live-badge">
-            <div class="live-dot"></div> Live
+            <div class="live-dot"></div> <span id="live-text">Live</span>
           </div>
 
-          <!-- 
-             IMPORTANT: To stream, go to YouTube/Twitch Studio, get the "Embed Code" 
-             and paste it inside the div below. 
-             For now, I put a placeholder image.
-          -->
-          <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; background:#111; color:#444;">
+          <video id="local-video-player" controls autoplay loop></video>
+
+          <div id="stream-placeholder">
              <i class="fa-brands fa-youtube" style="font-size: 4rem; margin-bottom: 1rem;"></i>
-             <p>Stream Loading...</p>
-             <p style="font-size:0.8rem; margin-top:10px;">(Paste YouTube Embed Code Here)</p>
+             <p>Stream Offline</p>
+             <p style="font-size:0.8rem; margin-top:10px; color:#666;">(Restoring previous stream...)</p>
           </div>
-          <!-- 
-             Example of what to paste:
-             <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" ...></iframe> 
-          -->
-
         </div>
 
         <div class="stream-info">
-          <h1 class="stream-title">LIVE: Sunday Worship & Drum Session</h1>
+          <h1 class="stream-title">PRIVATE SESSION</h1>
+          
           <div class="stream-meta">
-            <span class="view-count"><i class="fa-solid fa-eye"></i> 1,240 watching</span>
-            <span><i class="fa-regular fa-clock"></i> Started 2 hours ago</span>
-            <button style="background:none; border:none; color:var(--primary); cursor:pointer; margin-left:auto;">
-              <i class="fa-solid fa-share-nodes"></i> Share
+            <span class="view-count"><i class="fa-solid fa-eye"></i> <span id="viewer-count">0</span> watching</span>
+            
+            <button class="broadcast-btn" id="streamBtn" onclick="openPasswordModal()">
+              <i class="fa-solid fa-video"></i> Broadcast Source
             </button>
+          </div>
+
+          <div id="upload-area">
+            <p style="color:#fff; margin-bottom:10px;">Access Granted. Select Video File:</p>
+            <label for="file-input" class="upload-label">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Click to Upload Video
+            </label>
+            <input type="file" id="file-input" accept="video/*" onchange="playUploadedVideo(event)">
           </div>
         </div>
       </div>
 
-      <!-- Live Chat Section -->
       <div class="chat-sidebar">
         <div class="chat-header">
           <span>Top Chat</span>
@@ -376,14 +440,7 @@
         </div>
         
         <div class="chat-messages" id="chatMessages">
-          <!-- Fake Messages for Demo -->
-          <div class="message"><span class="user-name mod">Admin</span> Welcome to the stream everyone! 🥁</div>
-          <div class="message"><span class="user-name">DrumFan99</span> That fill was insane!</div>
-          <div class="message"><span class="user-name">Sarah_Music</span> How long have you been playing?</div>
-          <div class="message"><span class="user-name">BeatKing</span> Sound quality is great tonight.</div>
-          <div class="message"><span class="user-name">RhythmMaster</span> Can you play the intro again?</div>
-          <div class="message"><span class="user-name mod">Admin</span> Don't forget to like and subscribe!</div>
-          <div class="message"><span class="user-name">JasonD</span> 🔥🔥🔥</div>
+          <div class="message"><span class="user-name mod">System</span> Waiting for broadcast...</div>
         </div>
 
         <div class="chat-input-area">
@@ -393,64 +450,146 @@
       </div>
     </div>
 
-   
   </div>
 
   <script>
     
-  var form = document.getElementById("jrodsurvan@gmail.com");
-  
-  async function handleSubmit(event) {
-    event.preventDefault(); // Stop the page from reloading
-    var status = document.getElementById("my-form-status");
-    var data = new FormData(event.target);
+    let db;
+    const DB_NAME = "DanyStreamDB";
+    const DB_VERSION = 1;
+    const STORE_NAME = "videos";
+
+   
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+
+    request.onsuccess = (event) => {
+      db = event.target.result;
     
-    // Show a temporary "Sending..." state on the button
-    const btn = form.querySelector('button');
-    const originalIcon = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; // Loading icon
+      loadSavedVideo();
+    };
 
-    fetch(event.target.action, {
-      method: form.method,
-      body: data,
-      headers: {
-          'Accept': 'application/json'
+    request.onerror = (event) => {
+      console.error("Database error: " + event.target.errorCode);
+    };
+
+  
+    function saveVideoToDB(file) {
+      const transaction = db.transaction([STORE_NAME], "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+      
+      const request = store.put(file, "mainVideo");
+      
+      request.onsuccess = () => {
+        console.log("Video saved to database.");
+      };
+    }
+
+    
+    function loadSavedVideo() {
+      const transaction = db.transaction([STORE_NAME], "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.get("mainVideo");
+
+      request.onsuccess = () => {
+        const file = request.result;
+        if (file) {
+          
+          const videoURL = URL.createObjectURL(file);
+          const player = document.getElementById('local-video-player');
+          const placeholder = document.getElementById('stream-placeholder');
+          const liveBadgeText = document.getElementById('live-text');
+          const btn = document.getElementById('streamBtn');
+
+          player.src = videoURL;
+          placeholder.style.display = 'none';
+          player.style.display = 'block';
+          player.play();
+
+          liveBadgeText.innerText = "Private Feed";
+          liveBadgeText.style.color = "#00f2ff";
+          btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Change Stream';
+
+          addSystemMessage("Previous stream restored automatically.");
+        }
+      };
+    }
+
+    
+    function playUploadedVideo(event) {
+      const file = event.target.files[0];
+      if (file) {
+       
+        const videoURL = URL.createObjectURL(file);
+        const player = document.getElementById('local-video-player');
+        const placeholder = document.getElementById('stream-placeholder');
+        const liveBadgeText = document.getElementById('live-text');
+        const btn = document.getElementById('streamBtn');
+        const uploadArea = document.getElementById('upload-area');
+
+        player.src = videoURL;
+        placeholder.style.display = 'none';
+        player.style.display = 'block';
+        player.play();
+
+        liveBadgeText.innerText = "Private Feed";
+        liveBadgeText.style.color = "#00f2ff";
+
+        
+        uploadArea.style.display = 'none';
+        btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Change Stream';
+
+        
+        saveVideoToDB(file);
+
+        addSystemMessage("New video uploaded and saved.");
       }
-    }).then(response => {
-      if (response.ok) {
-        // Success! Clear input and show feedback
-        form.querySelector("input").value = ""; 
-        btn.innerHTML = '<i class="fa-solid fa-check"></i>'; // Checkmark
-        btn.style.color = "#0f0";
-        btn.style.background = "#fff";
-        
-        // Reset button after 2 seconds
-        setTimeout(() => {
-            btn.innerHTML = originalIcon;
-            btn.style.color = "";
-            btn.style.background = "";
-        }, 2000);
-        
-        // Optional: Add the message to the chat visually (fake append)
-        const chatBox = document.getElementById('chatMessages');
-        const userMsg = document.createElement('div');
-        userMsg.className = 'message';
-        userMsg.innerHTML = '<span class="user-name" style="color:#0f0">You</span> Message sent to Dany!';
-        chatBox.appendChild(userMsg);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+    }
 
+    function addSystemMessage(text) {
+      const chatBox = document.getElementById('chatMessages');
+      const sysMsg = document.createElement('div');
+      sysMsg.className = 'message';
+      sysMsg.innerHTML = '<span class="user-name mod">System</span> ' + text;
+      chatBox.appendChild(sysMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    
+    function openPasswordModal() {
+      document.getElementById('passwordModal').style.display = 'flex';
+      document.getElementById('adminPassword').value = ''; 
+      document.getElementById('adminPassword').focus();
+    }
+
+    function closeModal() {
+      document.getElementById('passwordModal').style.display = 'none';
+    }
+
+    function checkPassword() {
+      const inputPass = document.getElementById('adminPassword').value;
+      if (inputPass === "0340") {
+        closeModal();
+        const uploadArea = document.getElementById('upload-area');
+        if (uploadArea.style.display === 'block') {
+          uploadArea.style.display = 'none';
+        } else {
+          uploadArea.style.display = 'block';
+          uploadArea.scrollIntoView({ behavior: 'smooth' });
+        }
       } else {
-        // Error
-        btn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        alert("Incorrect Password!");
+        document.getElementById('adminPassword').value = '';
       }
-    }).catch(error => {
-        // Network Error
-        btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-    });
-  }
+    }
 
-  form.addEventListener("submit", handleSubmit);
-
+    
     function toggleMenu() {
       const nav = document.getElementById('navLinks');
       const icon = document.querySelector('.menu-btn i');
@@ -464,9 +603,16 @@
       }
     }
 
-    // Simple script to make chat feel alive (auto-scroll)
-    const chatContainer = document.getElementById('chatMessages');
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+   
+    let viewers = 120;
+    setInterval(() => {
+      viewers += Math.floor(Math.random() * 5) - 2;
+      document.getElementById('viewer-count').innerText = viewers;
+    }, 3000);
+
+    document.getElementById("adminPassword").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") checkPassword();
+    });
   </script>
 
 </body>
